@@ -1,8 +1,8 @@
 # Dynabook G83/HU · macOS Tahoe Hackintosh
 
-**戴尔 XPS 之外的小众选择——13.3" 商务本的完整 macOS 26 体验。**
+**13.3" 商务本运行 macOS Tahoe (26)。**
 
-面向 **Dynabook G83/HU（TOSHIBA PORTEGE X30L-J）** 的 OpenCore EFI 与定制 WhateverXe 核显驱动，开箱即用地运行 macOS Tahoe (26)。
+面向 **Dynabook G83/HU（TOSHIBA PORTEGE X30L-J）** 的 OpenCore EFI 与定制 WhateverXe 核显驱动。
 
 ![macOS](https://img.shields.io/badge/macOS-Tahoe%2026-000000?logo=apple&logoColor=white)
 ![OpenCore](https://img.shields.io/badge/OpenCore-1.0.x-4B5563)
