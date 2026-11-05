@@ -1,5 +1,8 @@
 # 安装步骤
 
+> [← 返回 README](../README.md) · [配置](CONFIG.md) · [Kexts](KEXTS.md) · [核显](GRAPHICS.md) · [电源](POWER.md) · [排错](TROUBLESHOOTING.md)
+
+
 本文面向 **Dynabook G83/HU（i5-1145G7 / Iris Xe 9A49）** 安装 macOS Tahoe 26。
 
 ---
