@@ -33,7 +33,7 @@
 | 系统安装 / 启动 | ✅ | 电池电量 | ✅ |
 | **核显加速 (Metal 2 / GL / 视频硬解)** | ✅ | NVMe 硬盘 | ✅ 原生 |
 | 内置屏 1920×1080 | ✅ | USB 端口（定制映射） | ✅ |
-| 亮度调节（键 + 滑块） | ✅ | 合盖熄屏 / 开盖即亮 | ✅ |
+| 亮度调节（键 + 滑块） | ✅ | 合盖防睡死（保持运行） | ✅ |
 | 音频（扬声器 / 耳机） | ✅ | **HDMI 视频输出** | ⚠️ 无信号 |
 | 键盘 / 触控板（多点手势） | ✅ | **雷电协议**（外接显卡/扩展坞） | ⚠️ 不可用 |
 | Wi-Fi（Intel） | ✅ | 摄像头画面 | ⚠️ 硬件限制 |
@@ -74,10 +74,10 @@
 │   ├── CONFIG.md           # OpenCore 配置详解
 │   ├── KEXTS.md            # kext 清单与作用
 │   ├── GRAPHICS.md         # 核显加速 (WhateverXe) 实现
-│   ├── POWER.md            # 合盖 / 近似睡眠服务
+│   ├── POWER.md            # 电源与合盖（防睡死）
 │   ├── TROUBLESHOOTING.md  # 常见问题速查
 │   └── AI-OPERATIONS.md    # AI / 维护者运维手册
-├── services/               # 合盖近似睡眠（launchd 服务）
+├── services/               # 防睡死服务（launchd）
 │   ├── nosleep.sh
 │   ├── com.local.keepawake.plist
 │   └── com.local.nosleep.plist
@@ -94,8 +94,8 @@
 ### 核显加速 — WhateverXe
 通过 [WhateverXe](https://github.com/b00t0x/WhateverXe)（基于 WhateverGreen 的 Tiger Lake 分支）实现 Metal 2 硬件加速与视频硬解。WEX 运行时 hook 苹果原生 `AppleIntelTGLGraphics` 驱动，因此**与 macOS 版本绑定**——系统大版本更新后需更新或重编译 WEX。详见 [GRAPHICS.md](docs/GRAPHICS.md)。
 
-### 合盖体验 — keep-awake
-本机为 Intel Modern Standby 供电模型，传统 S3 睡眠不兼容。项目提供轻量服务实现**合盖熄屏、开盖 1 秒内恢复、系统保持运行**。详见 [POWER.md](docs/POWER.md)。
+### 电源 — 防睡死
+本机为 Intel Modern Standby 供电模型，传统 S3 睡眠不兼容，进入即挂死。项目提供轻量服务**禁止系统睡眠**，避免合盖/闲置时睡死。详见 [POWER.md](docs/POWER.md)。
 
 ---
 
@@ -106,7 +106,7 @@
 | **HDMI 输出无信号** | 系统能识别外接显示器 EDID，但画面不输出（WEX TGL 端口通路限制） |
 | **雷电协议不可用** | TGL 集成雷电无 macOS 驱动；USB-C 口可作普通 USB / 充电 |
 | **USB-C 扩展坞会导致显示冻结** | 带视频的 USB-C 扩展坞触发 DP Alt Mode，可能卡死内屏（需重启）。**避免使用** |
-| **真睡眠 S3 不工作** | 固件 Modern Standby 下 S3 进入挂死；用合盖近似睡眠替代 |
+| **真睡眠 S3 不工作** | 固件 Modern Standby 下 S3 进入挂死；用禁止睡眠（防睡死）替代 |
 | **摄像头画面异常** | USB UVC 设备可识别但输出受限 |
 
 ---
