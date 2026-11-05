@@ -1,5 +1,8 @@
 # OpenCore 配置详解
 
+> [← 返回 README](../README.md) · [安装](INSTALL.md) · [Kexts](KEXTS.md) · [核显](GRAPHICS.md) · [电源](POWER.md)
+
+
 本机使用的 OpenCore 配置要点。适用于 **i5-1145G7 / Tiger Lake-U**。
 
 ---
