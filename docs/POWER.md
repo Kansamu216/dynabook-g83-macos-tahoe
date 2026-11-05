@@ -2,45 +2,41 @@
 
 > [← 返回 README](../README.md) · [安装](INSTALL.md) · [配置](CONFIG.md) · [排错](TROUBLESHOOTING.md)
 
+本机采用 Intel **Modern Standby** 供电模型（ACPI 中可见 `PEPD`/`INT33A1`）。macOS 的传统睡眠路径与该模型不兼容，**进入 S3 深度睡眠会挂死**（黑屏、唤不醒、需强制断电）。
 
-本机采用 Intel **Modern Standby** 供电模型（ACPI 中可见 `PEPD`/`INT33A1`）。macOS 的传统睡眠路径与该模型不兼容，进入 S3 会挂死。因此本项目采用 **keep-awake + 自然熄屏** 的方案，实现「合盖熄屏保持运行、开盖即恢复」。
+因此本项目采用**禁止睡眠**方案：让系统保持运行不进入 S3，从而避免睡死。
 
 ---
 
-## 行为（已实测验证）
+## 方案（纯防睡死，已实测有效）
 
-| 操作 | 表现 |
+| 项 | 作用 |
 |---|---|
-| 合上盖子 | 屏幕自然熄灭（背光 3→2→0）；系统保持运行；SSH / 后台任务不中断 |
-| 打开盖子 | 屏幕 **1 秒内**自动恢复（背光 0→3），回到桌面 |
-| 长时间合盖（1.5 分钟+） | 开盖同样正常恢复 |
-| 系统睡眠 | 禁用（`disablesleep=1`），避免进入深睡 |
+| `pmset -a disablesleep 1` | 禁止系统睡眠（核心） |
+| `com.local.keepawake`（launchd 托管 `caffeinate -ims`） | 阻止 idle/磁盘/系统睡眠，launchd KeepAlive 保证常驻 |
+| `com.local.nosleep`（launchd 托管 `nosleep.sh`） | 每 5 秒检查并保活 `disablesleep=1` |
+
+> ⚠️ **重要：不要用 `pmset displaysleepnow` 主动关屏。** 本机核显在合盖再开盖时，若显示曾被主动关闭，会触发 eDP `DBUF power up timeout` → `FB0 is not enabled` → 黑屏无法恢复。本方案**不发送任何显示命令**，让 macOS 自然管理显示电源。
 
 ---
 
-## 实现：两个 launchd 服务
+## 预期效果
 
-### 1) com.local.keepawake — 由 launchd 直接托管 caffeinate
-
-`services/com.local.keepawake.plist` 让 launchd 常驻运行 `/usr/bin/caffeinate -ims`（阻止系统睡眠）。由 launchd 的 `KeepAlive` 保证绝不退出（比在脚本里 nohup 更可靠）。
-
-### 2) com.local.nosleep — 仅保活 disablesleep
-
-`services/nosleep.sh` 每 5 秒检查并确保 `disablesleep=1`。
-
-> ⚠️ **关键：不要用 `pmset displaysleepnow` 主动关屏。** 本机核显（WEX）在合盖再开盖时，若显示曾被主动关闭，会触发 eDP 的 `DBUF power up timeout` → `FB0 is not enabled` → 黑屏无法恢复。让 macOS 自然管理显示电源即可正常恢复。
+- 合盖/闲置时**系统不进入睡眠、不睡死**（保持运行，SSH/后台任务不中断）
+- 屏幕是否熄灭由 macOS 自然处理；合盖后通常会自动熄屏
+- **代价**：合盖不会真正省电/休眠（因为没睡），这是本机固件限制下的取舍
 
 ---
 
 ## 安装
 
 ```bash
-# 1. 部署脚本
+# 1. 脚本
 sudo mkdir -p /usr/local/bin
 sudo cp services/nosleep.sh /usr/local/bin/nosleep.sh
 sudo chmod 755 /usr/local/bin/nosleep.sh
 
-# 2. 部署两个 launchd 服务
+# 2. 两个 launchd 服务
 sudo cp services/com.local.keepawake.plist /Library/LaunchDaemons/
 sudo cp services/com.local.nosleep.plist   /Library/LaunchDaemons/
 sudo chown root:wheel /Library/LaunchDaemons/com.local.*.plist
@@ -50,7 +46,7 @@ sudo chmod 644 /Library/LaunchDaemons/com.local.*.plist
 sudo launchctl bootstrap system /Library/LaunchDaemons/com.local.keepawake.plist
 sudo launchctl bootstrap system /Library/LaunchDaemons/com.local.nosleep.plist
 
-# 4. 直接设置（服务也会自动保活）
+# 4. 立即生效
 sudo pmset -a disablesleep 1 sleep 0 hibernatemode 0 standby 0 powernap 0
 ```
 
@@ -76,9 +72,3 @@ sudo rm /Library/LaunchDaemons/com.local.keepawake.plist /Library/LaunchDaemons/
 sudo rm /usr/local/bin/nosleep.sh
 sudo pmset -a disablesleep 0
 ```
-
----
-
-## 功耗参考（合盖熄屏状态）
-
-约 3 W（CPU 核心 C6 深睡、GPU 空闲；剩余为 SoC 平台基础供电）。
