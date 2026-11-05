@@ -1,5 +1,8 @@
 # 核显加速：WhateverXe
 
+> [← 返回 README](../README.md) · [配置](CONFIG.md) · [Kexts](KEXTS.md) · [电源](POWER.md)
+
+
 本机核显（Intel Iris Xe, Tiger Lake 9A49）通过 **WhateverXe (WEX)** 驱动实现完整的 Metal 2 硬件加速。
 
 ---
