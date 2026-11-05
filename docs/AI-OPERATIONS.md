@@ -1,5 +1,8 @@
 # AI / 维护者运维手册
 
+> [← 返回 README](../README.md) · [配置](CONFIG.md) · [电源](POWER.md) · [排错](TROUBLESHOOTING.md)
+
+
 本文件面向**接手此项目的 AI 助手或维护者**，提供可直接执行的诊断命令、判定逻辑与标准操作流程。所有命令为本机实测可用。
 
 > 约定：`$ ` 开头为 shell 命令（在目标 Mac 上执行）。路径以 OpenCore EFI 挂载点 `/Volumes/EFI/EFI/OC` 为准。
