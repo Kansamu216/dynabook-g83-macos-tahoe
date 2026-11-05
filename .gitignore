@@ -1,0 +1,22 @@
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# Large binary artifacts (distribute via Releases, not git)
+tools/G83-EFI-full.tgz
+*.zip
+*.tgz
+
+# SMBIOS secrets — never commit real values
+# (config.plist in repo has been sanitized to placeholder serials)
+*.plist.bak*
+
+# Editor / build
+.vscode/
+.idea/
+__pycache__/
+*.o
+*.dSYM/
