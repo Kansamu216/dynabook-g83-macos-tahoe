@@ -72,9 +72,10 @@
 
 ## 电源 / 合盖
 
-**合盖后黑屏需重启**
-- 确认已安装 `nosleep` 服务（见 POWER.md）。
-- 确认 `pmset -g | grep SleepDisabled` 为 `1`。
+**合盖后黑屏、开盖不恢复**
+- 确认已安装 `com.local.keepawake` + `com.local.nosleep` 两个服务（见 POWER.md）。
+- 确认 `pmset -g | grep SleepDisabled` 为 `1`、`pgrep -f 'caffeinate -ims'` 有进程。
+- ⚠️ **不要用 `pmset displaysleepnow` 主动关屏**——本机核显在合盖再开盖时会因主动关屏触发 `DBUF power up timeout` → `FB0 is not enabled` → 黑屏无法恢复。让 macOS 自然管理显示电源即可（实测开盖 1 秒内恢复）。
 
 ---
 
