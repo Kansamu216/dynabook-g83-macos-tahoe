@@ -1,5 +1,8 @@
 # 电源与合盖行为
 
+> [← 返回 README](../README.md) · [安装](INSTALL.md) · [配置](CONFIG.md) · [排错](TROUBLESHOOTING.md)
+
+
 本机采用 Intel **Modern Standby** 供电模型（ACPI 中可见 `PEPD`/`INT33A1`）。macOS 的传统睡眠路径与该模型不兼容，进入 S3 会挂死。因此本项目采用 **keep-awake + 自然熄屏** 的方案，实现「合盖熄屏保持运行、开盖即恢复」。
 
 ---
