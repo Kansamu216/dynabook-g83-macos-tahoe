@@ -1,5 +1,8 @@
 # Kext 清单
 
+> [← 返回 README](../README.md) · [配置](CONFIG.md) · [核显](GRAPHICS.md) · [安装](INSTALL.md)
+
+
 本 EFI 加载的内核扩展及作用。`启用状态` 与 `config.plist → Kernel → Add` 一致。
 
 ---
