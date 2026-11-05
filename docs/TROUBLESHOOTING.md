@@ -1,5 +1,8 @@
 # 常见问题速查
 
+> [← 返回 README](../README.md) · [安装](INSTALL.md) · [配置](CONFIG.md) · [电源](POWER.md)
+
+
 ---
 
 ## 启动
